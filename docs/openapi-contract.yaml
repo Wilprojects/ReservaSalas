@@ -24,6 +24,9 @@ paths:
         permite filtrarlas por fecha.
       operationId: GetReservas
 
+      security:
+        - Bearer: []
+
       parameters:
         - name: fecha
           in: query
@@ -56,6 +59,8 @@ paths:
       summary: Registrar una reserva
       description: Registra una nueva reserva de sala.
       operationId: CreateReserva
+      security:
+        - Bearer: []
 
       requestBody:
         required: true
@@ -95,6 +100,8 @@ paths:
         - Reservas
       summary: Obtener una reserva por Id
       operationId: GetReservaById
+      security:
+        - Bearer: []
 
       responses:
         '200':
@@ -115,6 +122,8 @@ paths:
         - Reservas
       summary: Actualizar una reserva
       operationId: UpdateReserva
+      security:
+        - Bearer: []
 
       requestBody:
         required: true
@@ -145,6 +154,8 @@ paths:
         - Reservas
       summary: Eliminar una reserva
       operationId: DeleteReserva
+      security:
+        - Bearer: []
 
       responses:
         '204':

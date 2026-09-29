@@ -12,25 +12,33 @@ public static class ReservasEndpoints
     {
         var group = endpoints
             .MapGroup("/api/reservas")
-            .WithTags("Reservas");
+            .WithTags("Reservas")
+            .RequireAuthorization();
 
         group.MapGet("", GetReservas)
             .WithName("GetReservas")
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapGet("/{id:int}", GetReservaById)
-            .WithName("GetReservaById");
+            .WithName("GetReservaById")
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapPost("", CreateReserva)
             .WithName("CreateReserva")
-            .ProducesValidationProblem(StatusCodes.Status400BadRequest);
+            .ProducesValidationProblem(
+                StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapPut("/{id:int}", UpdateReserva)
             .WithName("UpdateReserva")
-            .ProducesValidationProblem(StatusCodes.Status400BadRequest);
+            .ProducesValidationProblem(
+                StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapDelete("/{id:int}", DeleteReserva)
-            .WithName("DeleteReserva");
+            .WithName("DeleteReserva")
+            .Produces(StatusCodes.Status401Unauthorized);
 
         return endpoints;
     }
@@ -52,6 +60,9 @@ public static class ReservasEndpoints
     /// </response>
     /// <response code="400">
     /// El formato del parámetro fecha no es válido.
+    /// </response>
+    /// <response code="401">
+    /// No se proporcionó un token JWT válido.
     /// </response>
     public static Ok<List<ReservaResponse>> GetReservas(DateOnly? fecha, IReservaRepository repository)
     {
@@ -75,6 +86,9 @@ public static class ReservasEndpoints
     /// </param>
     /// <response code="200">
     /// Reserva encontrada correctamente.
+    /// </response>
+    /// <response code="401">
+    /// No se proporcionó un token JWT válido.
     /// </response>
     /// <response code="404">
     /// No existe una reserva con el identificador indicado.
@@ -104,6 +118,9 @@ public static class ReservasEndpoints
     /// </param>
     /// <response code="201">
     /// Reserva creada correctamente.
+    /// </response>
+    /// <response code="401">
+    /// No se proporcionó un token JWT válido.
     /// </response>
     /// <response code="400">
     /// Los datos enviados no cumplen las reglas de validación.
@@ -135,6 +152,9 @@ public static class ReservasEndpoints
     /// <response code="400">
     /// Los datos enviados no cumplen las reglas de validación.
     /// </response>
+    /// <response code="401">
+    /// No se proporcionó un token JWT válido.
+    /// </response>
     /// <response code="404">
     /// No existe una reserva con el identificador indicado.
     /// </response>
@@ -163,6 +183,9 @@ public static class ReservasEndpoints
     /// </param>
     /// <response code="204">
     /// Reserva eliminada correctamente.
+    /// </response>
+    /// <response code="401">
+    /// No se proporcionó un token JWT válido.
     /// </response>
     /// <response code="404">
     /// No existe una reserva con el identificador indicado.

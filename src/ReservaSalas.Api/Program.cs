@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi;
 using ReservaSalas.Api.Endpoints;
 using ReservaSalas.Api.Models;
 using ReservaSalas.Api.Repositories;
@@ -16,13 +18,20 @@ builder.Services.AddValidation();
 // Repositorio en memoria
 builder.Services.AddSingleton<IReservaRepository, ReservaRepository>();
 
+// Autenticación JWT Bearer
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
+builder.Services.AddAuthorization();
+
 // Servicios de OpenAPI
 builder.Services.AddOpenApi(options =>
 {
-    options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+    options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
 
-    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    options.AddDocumentTransformer(
+        (document, context, cancellationToken) =>
         {
+            // Información general de la API
             document.Info = new()
             {
                 Title = "API de Gestión de Reservas de Salas",
@@ -30,9 +39,48 @@ builder.Services.AddOpenApi(options =>
                 Description = "API REST desarrollada en ASP.NET Core para administrar reservas de salas de reuniones de una organización."
             };
 
+            // Definición del esquema Bearer JWT
+            document.Components ??= new OpenApiComponents();
+
+            document.Components.SecuritySchemes =
+                new Dictionary<string, IOpenApiSecurityScheme>
+                {
+                    ["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        BearerFormat = "JWT",
+                        In = ParameterLocation.Header,
+                        Description = "Ingrese el token JWT para autenticar las solicitudes."
+                    }
+                };
+
+            // Aplicar Bearer solamente a /api/reservas
+            foreach (var path in document.Paths)
+            {
+                if (!path.Key.StartsWith("/api/reservas", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                foreach (var operation in path.Value.Operations.Values)
+                {
+                    operation.Security ??= [];
+
+                    operation.Security.Add(
+                        new OpenApiSecurityRequirement
+                        {
+                            [
+                                new OpenApiSecuritySchemeReference("Bearer",document)
+                            ] = []
+                        });
+                }
+            }
+
             return Task.CompletedTask;
         });
 });
+
 
 var app = builder.Build();
 
@@ -52,6 +100,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapGet("/", () =>
 {
     return Results.Ok(new
@@ -59,7 +110,8 @@ app.MapGet("/", () =>
         message = "API de Gestión de Reservas de Salas",
         status = "running"
     });
-});
+})
+.AllowAnonymous();
 
 app.MapReservasEndpoints();
 
