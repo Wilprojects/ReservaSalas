@@ -1,4 +1,5 @@
 using ReservaSalas.Api.Models;
+using ReservaSalas.Api.Repositories;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 // Validación automática de Minimal APIs
 builder.Services.AddValidation();
+
+// Repositorio en memoria
+builder.Services.AddSingleton<IReservaRepository, ReservaRepository>();
 
 // Servicios de OpenAPI
 builder.Services.AddOpenApi();
