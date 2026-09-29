@@ -1,3 +1,4 @@
+using ReservaSalas.Api.Endpoints;
 using ReservaSalas.Api.Models;
 using ReservaSalas.Api.Repositories;
 using System.Text.Json.Serialization;
@@ -36,5 +37,7 @@ app.MapGet("/", () =>
         status = "running"
     });
 });
+
+app.MapReservasEndpoints();
 
 app.Run();
