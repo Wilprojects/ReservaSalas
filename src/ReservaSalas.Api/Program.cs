@@ -17,7 +17,22 @@ builder.Services.AddValidation();
 builder.Services.AddSingleton<IReservaRepository, ReservaRepository>();
 
 // Servicios de OpenAPI
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+        {
+            document.Info = new()
+            {
+                Title = "API de Gestión de Reservas de Salas",
+                Version = "1.0.0",
+                Description = "API REST desarrollada en ASP.NET Core para administrar reservas de salas de reuniones de una organización."
+            };
+
+            return Task.CompletedTask;
+        });
+});
 
 var app = builder.Build();
 

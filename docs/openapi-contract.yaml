@@ -88,7 +88,7 @@ paths:
         schema:
           type: integer
           format: int32
-          minimum: 1
+
 
     get:
       tags:
