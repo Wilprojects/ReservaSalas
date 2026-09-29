@@ -1,0 +1,327 @@
+openapi: 3.0.3
+
+info:
+  title: API de Gestión de Reservas de Salas
+  version: 1.0.0
+  description: >
+    API REST desarrollada en ASP.NET Core para administrar
+    reservas de salas de reuniones de una organización.
+
+tags:
+  - name: Reservas
+    description: Operaciones para gestionar reservas de salas.
+
+paths:
+
+  /api/reservas:
+
+    get:
+      tags:
+        - Reservas
+      summary: Obtener reservas
+      description: >
+        Obtiene todas las reservas registradas. Opcionalmente
+        permite filtrarlas por fecha.
+      operationId: GetReservas
+
+      parameters:
+        - name: fecha
+          in: query
+          required: false
+          description: Fecha utilizada para filtrar las reservas.
+          schema:
+            type: string
+            format: date
+          example: 2026-10-15
+
+      responses:
+        '200':
+          description: Reservas obtenidas correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReservaResponse'
+
+        '400':
+          description: Parámetro de fecha inválido.
+
+        '401':
+          description: No autorizado.
+    
+    post:
+      tags:
+        - Reservas
+      summary: Registrar una reserva
+      description: Registra una nueva reserva de sala.
+      operationId: CreateReserva
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearReservaRequest'
+
+      responses:
+        '201':
+          description: Reserva creada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservaResponse'
+
+        '400':
+          description: Datos de la reserva inválidos.
+
+        '401':
+          description: No autorizado.
+
+  /api/reservas/{id}:
+
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Identificador único de la reserva.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+
+    get:
+      tags:
+        - Reservas
+      summary: Obtener una reserva por Id
+      operationId: GetReservaById
+
+      responses:
+        '200':
+          description: Reserva encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservaResponse'
+
+        '401':
+          description: No autorizado.
+
+        '404':
+          description: Reserva no encontrada.
+    
+    put:
+      tags:
+        - Reservas
+      summary: Actualizar una reserva
+      operationId: UpdateReserva
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActualizarReservaRequest'
+
+      responses:
+        '200':
+          description: Reserva actualizada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservaResponse'
+
+        '400':
+          description: Datos inválidos.
+
+        '401':
+          description: No autorizado.
+
+        '404':
+          description: Reserva no encontrada.
+
+    delete:
+      tags:
+        - Reservas
+      summary: Eliminar una reserva
+      operationId: DeleteReserva
+
+      responses:
+        '204':
+          description: Reserva eliminada correctamente.
+
+        '401':
+          description: No autorizado.
+
+        '404':
+          description: Reserva no encontrada.
+
+components:
+
+  schemas:
+
+    CrearReservaRequest:
+      type: object
+      required:
+        - nombreSala
+        - fechaReserva
+        - horaInicio
+        - horaFin
+        - nombreResponsable
+        - cantidadAsistentes
+        - motivo
+
+      properties:
+
+        nombreSala:
+          type: string
+          maxLength: 100
+          example: Sala Lima
+
+        fechaReserva:
+          type: string
+          format: date
+          example: 2026-10-15
+
+        horaInicio:
+          type: string
+          format: time
+          example: "09:00:00"
+
+        horaFin:
+          type: string
+          format: time
+          example: "10:30:00"
+
+        nombreResponsable:
+          type: string
+          maxLength: 100
+          example: Ana Torres
+
+        cantidadAsistentes:
+          type: integer
+          minimum: 1
+          example: 8
+
+        motivo:
+          type: string
+          maxLength: 500
+          example: Reunión de planificación
+
+    ActualizarReservaRequest:
+      type: object
+      required:
+        - nombreSala
+        - fechaReserva
+        - horaInicio
+        - horaFin
+        - nombreResponsable
+        - cantidadAsistentes
+        - motivo
+        - estado
+
+      properties:
+
+        nombreSala:
+          type: string
+          maxLength: 100
+
+        fechaReserva:
+          type: string
+          format: date
+
+        horaInicio:
+          type: string
+          format: time
+
+        horaFin:
+          type: string
+          format: time
+
+        nombreResponsable:
+          type: string
+          maxLength: 100
+
+        cantidadAsistentes:
+          type: integer
+          minimum: 1
+
+        motivo:
+          type: string
+          maxLength: 500
+
+        estado:
+          $ref: '#/components/schemas/EstadoReserva'
+
+    ReservaResponse:
+      type: object
+      required:
+        - id
+        - nombreSala
+        - fechaReserva
+        - horaInicio
+        - horaFin
+        - nombreResponsable
+        - cantidadAsistentes
+        - motivo
+        - estado
+
+      properties:
+
+        id:
+          type: integer
+          format: int32
+          example: 1
+
+        nombreSala:
+          type: string
+          example: Sala Lima
+
+        fechaReserva:
+          type: string
+          format: date
+          example: 2026-10-15
+
+        horaInicio:
+          type: string
+          format: time
+          example: "09:00:00"
+
+        horaFin:
+          type: string
+          format: time
+          example: "10:30:00"
+
+        nombreResponsable:
+          type: string
+          example: Ana Torres
+
+        cantidadAsistentes:
+          type: integer
+          example: 8
+
+        motivo:
+          type: string
+          example: Reunión de planificación
+
+        estado:
+          $ref: '#/components/schemas/EstadoReserva'
+        
+    EstadoReserva:
+      type: string
+      enum:
+        - Pendiente
+        - Confirmada
+        - Cancelada
+      example: Pendiente
+
+  securitySchemes:
+
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT utilizado para autenticar las solicitudes.
+
+security:
+  - Bearer: []
