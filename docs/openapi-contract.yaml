@@ -175,6 +175,7 @@ components:
 
         nombreSala:
           type: string
+          minLength: 1
           maxLength: 100
           example: Sala Lima
 
@@ -191,10 +192,14 @@ components:
         horaFin:
           type: string
           format: time
+          description: >
+            Hora de finalización de la reserva.
+            Debe ser posterior a la hora de inicio.
           example: "10:30:00"
 
         nombreResponsable:
           type: string
+          minLength: 1
           maxLength: 100
           example: Ana Torres
 
@@ -205,6 +210,7 @@ components:
 
         motivo:
           type: string
+          minLength: 1
           maxLength: 500
           example: Reunión de planificación
 
@@ -224,7 +230,9 @@ components:
 
         nombreSala:
           type: string
+          minLength: 1
           maxLength: 100
+          example: Sala Lima
 
         fechaReserva:
           type: string
@@ -237,18 +245,27 @@ components:
         horaFin:
           type: string
           format: time
+          description: >
+            Hora de finalización de la reserva.
+            Debe ser posterior a la hora de inicio.
+          example: "10:30:00"
 
         nombreResponsable:
           type: string
+          minLength: 1
           maxLength: 100
+          example: Ana Torres
 
         cantidadAsistentes:
           type: integer
           minimum: 1
+          example: 8
 
         motivo:
           type: string
+          minLength: 1
           maxLength: 500
+          example: Reunión de planificación
 
         estado:
           $ref: '#/components/schemas/EstadoReserva'
@@ -275,6 +292,8 @@ components:
 
         nombreSala:
           type: string
+          minLength: 1
+          maxLength: 100
           example: Sala Lima
 
         fechaReserva:
@@ -290,18 +309,26 @@ components:
         horaFin:
           type: string
           format: time
+          description: >
+            Hora de finalización de la reserva.
+            Debe ser posterior a la hora de inicio.
           example: "10:30:00"
 
         nombreResponsable:
           type: string
+          minLength: 1
+          maxLength: 100
           example: Ana Torres
 
         cantidadAsistentes:
           type: integer
+          minimum: 1
           example: 8
 
         motivo:
           type: string
+          minLength: 1
+          maxLength: 500
           example: Reunión de planificación
 
         estado:

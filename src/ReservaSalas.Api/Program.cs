@@ -8,6 +8,9 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter<EstadoReserva>(allowIntegerValues: false));
 });
 
+// Validación automática de Minimal APIs
+builder.Services.AddValidation();
+
 // Servicios de OpenAPI
 builder.Services.AddOpenApi();
 
