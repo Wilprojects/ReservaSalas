@@ -87,11 +87,16 @@ var app = builder.Build();
 // Documento OpenAPI disponible solo en desarrollo
 if (app.Environment.IsDevelopment())
 {
+    // OpenAPI en JSON
     app.MapOpenApi();
+
+    // OpenAPI en YAML
+    app.MapOpenApi("/openapi/{documentName}.yaml");
 
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "API de Gestión de Reservas de Salas v1");
+
         options.DocumentTitle = "API de Gestión de Reservas de Salas";
 
         options.DisplayRequestDuration();
