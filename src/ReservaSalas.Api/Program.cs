@@ -63,16 +63,21 @@ builder.Services.AddOpenApi(options =>
                     continue;
                 }
 
-                foreach (var operation in path.Value.Operations.Values)
+                var operations = path.Value.Operations;
+
+                if (operations is null)
+                {
+                    continue;
+                }
+
+                foreach (var operation in operations.Values)
                 {
                     operation.Security ??= [];
 
                     operation.Security.Add(
                         new OpenApiSecurityRequirement
                         {
-                            [
-                                new OpenApiSecuritySchemeReference("Bearer",document)
-                            ] = []
+                            [new OpenApiSecuritySchemeReference("Bearer", document)] = []
                         });
                 }
             }

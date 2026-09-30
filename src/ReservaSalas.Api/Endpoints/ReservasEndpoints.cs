@@ -55,6 +55,9 @@ public static class ReservasEndpoints
     /// <param name="fecha" example="2026-10-15">
     /// Fecha opcional utilizada para filtrar las reservas.
     /// </param>
+    /// <param name="repository">
+    /// Repositorio utilizado para consultar las reservas.
+    /// </param>
     /// <response code="200">
     /// Reservas obtenidas correctamente.
     /// </response>
@@ -83,6 +86,9 @@ public static class ReservasEndpoints
     /// </summary>
     /// <param name="id" example="1">
     /// Identificador único de la reserva.
+    /// </param>
+    /// <param name="repository">
+    /// Repositorio utilizado para consultar la reserva.
     /// </param>
     /// <response code="200">
     /// Reserva encontrada correctamente.
@@ -116,14 +122,17 @@ public static class ReservasEndpoints
     /// <param name="request">
     /// Datos necesarios para registrar la reserva.
     /// </param>
+    /// <param name="repository">
+    /// Repositorio utilizado para almacenar la nueva reserva.
+    /// </param>
     /// <response code="201">
     /// Reserva creada correctamente.
     /// </response>
-    /// <response code="401">
-    /// No se proporcionó un token JWT válido.
-    /// </response>
     /// <response code="400">
     /// Los datos enviados no cumplen las reglas de validación.
+    /// </response>
+    /// <response code="401">
+    /// No se proporcionó un token JWT válido.
     /// </response>
     public static Created<ReservaResponse> CreateReserva(CrearReservaRequest request, IReservaRepository repository)
     {
@@ -145,6 +154,9 @@ public static class ReservasEndpoints
     /// </param>
     /// <param name="request">
     /// Nuevos datos de la reserva.
+    /// </param>
+    /// <param name="repository">
+    /// Repositorio utilizado para consultar y actualizar la reserva.
     /// </param>
     /// <response code="200">
     /// Reserva actualizada correctamente.
@@ -180,6 +192,9 @@ public static class ReservasEndpoints
     /// </summary>
     /// <param name="id" example="1">
     /// Identificador de la reserva que será eliminada.
+    /// </param>
+    /// <param name="repository">
+    /// Repositorio utilizado para eliminar la reserva.
     /// </param>
     /// <response code="204">
     /// Reserva eliminada correctamente.

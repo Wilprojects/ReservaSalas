@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/ReservaSalas.Api/ReservaSalas.Api.csproj" />
+    <Project Path="src/ReservaSalas.Client/ReservaSalas.Client.csproj" />
   </Folder>
 </Solution>
